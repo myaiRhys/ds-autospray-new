@@ -90,20 +90,22 @@
     .hero-left {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      padding: 1rem 2rem 4rem;
+      justify-content: space-between;
+      padding: 2rem;
       position: relative;
       z-index: 2;
-      gap: 0;
     }
 
     .hero-logo {
-      height: 400px;
+      height: 300px;
       width: auto;
       object-fit: contain;
       align-self: flex-start;
-      margin-left: -1rem;
-      margin-bottom: 1rem;
+    }
+
+    .hero-bottom {
+      display: flex;
+      flex-direction: column;
     }
 
     .hero-right {
@@ -644,16 +646,18 @@
   <section class="hero">
     <div class="hero-left">
       <img src="ds%20logo.png" alt="DS Auto Spray" class="hero-logo">
-      <h1 class="hero-title">
-        <span class="outline">Your car,</span>
-        <span>our canvas.</span>
-      </h1>
-      <a href="#contact" class="hero-cta">
-        Get Quote
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </a>
+      <div class="hero-bottom">
+        <h1 class="hero-title">
+          <span class="outline">Your car,</span>
+          <span>our canvas.</span>
+        </h1>
+        <a href="#contact" class="hero-cta">
+          Get Quote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
     </div>
     <div class="hero-right">
       <img src="IMG_0089.JPG" alt="Deep green BMW E30 custom respray" loading="eager">

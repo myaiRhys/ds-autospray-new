@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DS Auto Spray | Muizenberg, Cape Town</title>
+  <meta name="description" content="Premium automotive spray painting. Full resprays, custom work, rim painting. Muizenberg, Cape Town.">
+
+  <!-- Fonts: Outfit (geometric bold) + Space Mono (techy contrast) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --green-dark: #1B4D2E;
+      --green-light: #2A6B40;
+      --green-glow: #3D8B56;
+      --text: #F5F0E8;
+      --text-muted: rgba(245, 240, 232, 0.4);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .mono {
+      font-family: 'Space Mono', monospace;
+      letter-spacing: -0.02em;
+    }
+
+    /* === NAVIGATION === */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+    }
+
+    .nav-logo {
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .nav-contact {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    /* === HERO: SPLIT DIAGONAL === */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-right {
+      position: relative;
+      clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+
+    .hero-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.2);
+    }
+
+    .hero-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 900;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      margin-bottom: 2rem;
+    }
+
+    .hero-title span {
+      display: block;
+    }
+
+    .hero-title .outline {
+      -webkit-text-stroke: 2px var(--text);
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      max-width: 320px;
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--green-dark);
+      color: var(--text);
+      padding: 1rem 2rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+
+    .hero-cta:hover {
+      background: var(--green-light);
+      gap: 1.5rem;
+    }
+
+    .hero-cta svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.4s ease;
+    }
+
+    .hero-cta:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* === HORIZONTAL SCROLL GALLERY === */
+    .gallery-section {
+      padding: 6rem 0;
+      overflow: hidden;
+    }
+
+    .gallery-header {
+      padding: 0 4rem;
+      margin-bottom: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .gallery-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .gallery-count {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+    }
+
+    .gallery-track {
+      display: flex;
+      gap: 1.5rem;
+      padding: 0 4rem;
+      cursor: grab;
+    }
+
+    .gallery-track:active {
+      cursor: grabbing;
+    }
+
+    .gallery-item {
+      flex-shrink: 0;
+      width: 45vw;
+      max-width: 600px;
+      aspect-ratio: 4/3;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-item:nth-child(even) {
+      margin-top: 4rem;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+
+    .gallery-item-label {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      background: var(--bg);
+      padding: 0.5rem 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+
+    .gallery-item:hover .gallery-item-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === SERVICES: STACKED REVEALS === */
+    .services {
+      padding: 8rem 4rem;
+      position: relative;
+    }
+
+    .services::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--green-dark), transparent);
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 6rem;
+    }
+
+    .services-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--green-light);
+      margin-bottom: 1rem;
+    }
+
+    .services-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .services-grid {
+      display: grid;
+      gap: 0;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .service-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid rgba(245, 240, 232, 0.1);
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .service-item:nth-child(even) {
+      direction: rtl;
+    }
+
+    .service-item:nth-child(even) > * {
+      direction: ltr;
+    }
+
+    .service-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .service-number {
+      padding: 3rem 2rem;
+      font-size: 4rem;
+      font-weight: 900;
+      color: var(--green-dark);
+      line-height: 1;
+    }
+
+    .service-content {
+      padding: 3rem 2rem;
+    }
+
+    .service-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .service-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 280px;
+    }
+
+    /* === MARQUEE STRIP === */
+    .marquee {
+      padding: 2rem 0;
+      background: var(--green-dark);
+      overflow: hidden;
+      transform: rotate(-1deg) scale(1.02);
+      margin: 4rem 0;
+    }
+
+    .marquee-track {
+      display: flex;
+      animation: marquee 25s linear infinite;
+      width: max-content;
+    }
+
+    .marquee-item {
+      padding: 0 3rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .marquee-item::after {
+      content: '—';
+      margin-left: 3rem;
+      color: var(--green-light);
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* === STATS BLOCK === */
+    .stats {
+      padding: 6rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .stat-item {
+      padding: 3rem 2rem;
+      border: 1px solid rgba(245, 240, 232, 0.1);
+      position: relative;
+    }
+
+    .stat-number {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--text) 0%, var(--green-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* === CONTACT: FULL BLEED === */
+    .contact {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+
+    .contact-visual {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.7) saturate(1.2);
+    }
+
+    .contact-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 0%, var(--bg) 100%);
+    }
+
+    .contact-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem;
+    }
+
+    .contact-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--green-light);
+      margin-bottom: 1rem;
+    }
+
+    .contact-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
+      margin-bottom: 3rem;
+    }
+
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .contact-method {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .contact-method-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .contact-method-value {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .contact-method-value:hover {
+      color: var(--green-light);
+    }
+
+    .contact-location {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .contact-location::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--green-dark);
+    }
+
+    /* === FOOTER === */
+    .footer {
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(245, 240, 232, 0.1);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .footer-copy {
+      letter-spacing: 0.1em;
+    }
+
+    .footer-credit {
+      letter-spacing: 0.05em;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 50vh;
+      }
+
+      .hero-right {
+        clip-path: polygon(0 15%, 100% 0, 100% 100%, 0% 100%);
+      }
+
+      .hero-left {
+        padding: 8rem 2rem 4rem;
+      }
+
+      .contact {
+        grid-template-columns: 1fr;
+        grid-template-rows: 50vh 1fr;
+      }
+
+      .contact-visual::after {
+        background: linear-gradient(to bottom, transparent 0%, var(--bg) 100%);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        padding: 1rem;
+      }
+
+      .gallery-header,
+      .services,
+      .contact-content,
+      .footer {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+
+      .gallery-track {
+        padding: 0 1.5rem;
+      }
+
+      .gallery-item {
+        width: 75vw;
+      }
+
+      .service-item {
+        grid-template-columns: auto 1fr;
+      }
+
+      .service-number {
+        font-size: 2.5rem;
+        padding: 2rem 1rem;
+      }
+
+      .service-content {
+        padding: 2rem 1rem;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+        padding: 4rem 1.5rem;
+      }
+
+      .footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+
+    /* === REDUCED MOTION === */
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-track {
+        animation: none;
+      }
+
+      .gallery-item img,
+      .service-item {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-logo mono">DS//AUTO</div>
+    <div class="nav-contact mono">072 690 8620</div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-label mono">Automotive Paint Specialists</div>
+      <h1 class="hero-title">
+        <span class="outline">Custom</span>
+        <span>Finish</span>
+      </h1>
+      <p class="hero-subtitle">Premium spray work for those who see their ride as more than transport.</p>
+      <a href="#contact" class="hero-cta">
+        Get Quote
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero-right">
+      <img src="IMG_0089.JPG" alt="Deep green BMW E30 custom respray" loading="eager">
+    </div>
+  </section>
+
+  <!-- Horizontal Gallery -->
+  <section class="gallery-section">
+    <div class="gallery-header">
+      <h2 class="gallery-title">The Work</h2>
+      <span class="gallery-count mono">14 Projects</span>
+    </div>
+    <div class="gallery-track" id="galleryTrack">
+      <div class="gallery-item">
+        <img src="IMG_0082.JPG" alt="Yellow Audi TT colour change" loading="lazy">
+        <span class="gallery-item-label mono">Audi TT</span>
+      </div>
+      <div class="gallery-item">
+        <img src="IMG_0084.JPG" alt="White VW Golf R blue calipers" loading="lazy">
+        <span class="gallery-item-label mono">Golf R</span>
+      </div>
+      <div class="gallery-item">
+        <img src="IMG_0095.jpg" alt="Matte green Audi TT respray" loading="lazy">
+        <span class="gallery-item-label mono">Audi TT</span>
+      </div>
+      <div class="gallery-item">
+        <img src="IMG_0090.JPG" alt="Cream Jeep Wrangler respray" loading="lazy">
+        <span class="gallery-item-label mono">Wrangler</span>
+      </div>
+      <div class="gallery-item">
+        <img src="IMG_0093.jpg" alt="Custom purple metallic motorcycle tank" loading="lazy">
+        <span class="gallery-item-label mono">Custom Tank</span>
+      </div>
+      <div class="gallery-item">
+        <img src="IMG_0091.JPG" alt="Custom respray work" loading="lazy">
+        <span class="gallery-item-label mono">Custom</span>
+      </div>
+      <div class="gallery-item">
+        <img src="IMG_0086.JPG" alt="Spray booth work" loading="lazy">
+        <span class="gallery-item-label mono">In Booth</span>
+      </div>
+      <div class="gallery-item">
+        <img src="IMG_0094.jpg" alt="Detail work" loading="lazy">
+        <span class="gallery-item-label mono">Detail</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span class="marquee-item">Full Resprays</span>
+      <span class="marquee-item">Custom Colours</span>
+      <span class="marquee-item">Rim Painting</span>
+      <span class="marquee-item">Caliper Finishes</span>
+      <span class="marquee-item">Collision Repair</span>
+      <span class="marquee-item">Detailing</span>
+      <span class="marquee-item">Full Resprays</span>
+      <span class="marquee-item">Custom Colours</span>
+      <span class="marquee-item">Rim Painting</span>
+      <span class="marquee-item">Caliper Finishes</span>
+      <span class="marquee-item">Collision Repair</span>
+      <span class="marquee-item">Detailing</span>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <section class="services" id="services">
+    <div class="services-header">
+      <div class="services-label mono">What We Do</div>
+      <h2 class="services-title">Services</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-item">
+        <div class="service-number mono">01</div>
+        <div class="service-content">
+          <h3 class="service-name">Full Resprays</h3>
+          <p class="service-desc">Complete colour transformations. Factory finish or something nobody's seen before.</p>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-number mono">02</div>
+        <div class="service-content">
+          <h3 class="service-name">Custom Work</h3>
+          <p class="service-desc">Your vision, our execution. Metallic flakes, colour shifts, matte wraps—anything goes.</p>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-number mono">03</div>
+        <div class="service-content">
+          <h3 class="service-name">Rims & Calipers</h3>
+          <p class="service-desc">The details that separate builds from stock. Powder coat or wet spray.</p>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-number mono">04</div>
+        <div class="service-content">
+          <h3 class="service-name">Collision Repair</h3>
+          <p class="service-desc">Panel beating and paint matching. Like it never happened.</p>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-number mono">05</div>
+        <div class="service-content">
+          <h3 class="service-name">Detailing</h3>
+          <p class="service-desc">Paint correction, ceramic coating, full decontamination. Protection that lasts.</p>
+        </div>
+      </div>
+      <div class="service-item">
+        <div class="service-number mono">06</div>
+        <div class="service-content">
+          <h3 class="service-name">Bikes & Boats</h3>
+          <p class="service-desc">If it moves and needs paint, we handle it. Tanks, fairings, hulls.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stat-item">
+      <div class="stat-number">10+</div>
+      <div class="stat-label mono">Years Experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">500+</div>
+      <div class="stat-label mono">Vehicles Sprayed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">100%</div>
+      <div class="stat-label mono">Satisfaction</div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="contact-visual">
+      <img src="IMG_0087.JPG" alt="DS Auto Spray booth" loading="lazy">
+    </div>
+    <div class="contact-content">
+      <div class="contact-label mono">Get In Touch</div>
+      <h2 class="contact-title">Let's<br>Talk<br>Paint</h2>
+      <div class="contact-methods">
+        <div class="contact-method">
+          <span class="contact-method-label mono">Call / WhatsApp</span>
+          <a href="tel:0726908620" class="contact-method-value">072 690 8620</a>
+        </div>
+        <div class="contact-method">
+          <span class="contact-method-label mono">Email</span>
+          <a href="mailto:dsautospray@gmail.com" class="contact-method-value">dsautospray@gmail.com</a>
+        </div>
+      </div>
+      <div class="contact-location">Muizenberg, Cape Town</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-copy mono">DS Auto Spray © 2015–2025</div>
+    <div class="footer-credit">Built in Cape Town</div>
+  </footer>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Service items reveal
+    const serviceItems = document.querySelectorAll('.service-item');
+    serviceItems.forEach((item, index) => {
+      ScrollTrigger.create({
+        trigger: item,
+        start: 'top 85%',
+        onEnter: () => {
+          setTimeout(() => item.classList.add('visible'), index * 80);
+        }
+      });
+    });
+
+    // Draggable gallery
+    const track = document.getElementById('galleryTrack');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - track.offsetLeft;
+      scrollLeft = track.parentElement.scrollLeft;
+    });
+
+    track.addEventListener('mouseleave', () => isDown = false);
+    track.addEventListener('mouseup', () => isDown = false);
+
+    track.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (x - startX) * 2;
+      track.parentElement.scrollLeft = scrollLeft - walk;
+    });
+
+    // Horizontal scroll with mouse wheel
+    const gallerySection = document.querySelector('.gallery-section');
+    gallerySection.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        track.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+
+    // Hero parallax
+    gsap.to('.hero-right img', {
+      yPercent: 20,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+
+    // Stats counter animation
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach(stat => {
+      const text = stat.textContent;
+      const num = parseInt(text);
+      const suffix = text.replace(/[0-9]/g, '');
+
+      ScrollTrigger.create({
+        trigger: stat,
+        start: 'top 80%',
+        onEnter: () => {
+          gsap.fromTo(stat,
+            { innerHTML: '0' + suffix },
+            {
+              innerHTML: num + suffix,
+              duration: 2,
+              ease: 'power2.out',
+              snap: { innerHTML: 1 },
+              onUpdate: function() {
+                const current = Math.round(gsap.getProperty(stat, 'innerHTML'));
+                stat.innerHTML = current + suffix;
+              }
+            }
+          );
+        },
+        once: true
+      });
+    });
+
+    // Smooth anchor scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

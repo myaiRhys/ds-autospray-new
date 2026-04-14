@@ -567,17 +567,32 @@
 
     /* === RESPONSIVE === */
     @media (max-width: 1024px) {
-      .hero {
+      .hero-main {
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 50vh;
+        grid-template-rows: auto 50vh;
       }
 
-      .hero-right {
-        clip-path: polygon(0 15%, 100% 0, 100% 100%, 0% 100%);
+      .hero-logo-bar {
+        position: relative;
+        padding: 1rem;
+      }
+
+      .hero-logo {
+        height: 200px;
       }
 
       .hero-left {
-        padding: 8rem 2rem 4rem;
+        padding: 2rem;
+        order: 1;
+      }
+
+      .hero-right {
+        clip-path: none;
+        order: 2;
+      }
+
+      .hero-title {
+        font-size: clamp(2rem, 8vw, 4rem);
       }
 
       .contact {
@@ -593,6 +608,18 @@
     @media (max-width: 768px) {
       .nav {
         padding: 1rem;
+      }
+
+      .hero-logo {
+        height: 150px;
+      }
+
+      .hero-left {
+        padding: 1.5rem;
+      }
+
+      .hero-title {
+        font-size: clamp(1.8rem, 7vw, 3rem);
       }
 
       .gallery-header,

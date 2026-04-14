@@ -90,10 +90,18 @@
     .hero-left {
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
-      padding: 8rem 4rem 4rem;
+      justify-content: flex-start;
+      padding: 2rem 4rem 4rem;
       position: relative;
       z-index: 2;
+    }
+
+    .hero-logo {
+      height: 500px;
+      width: auto;
+      object-fit: contain;
+      align-self: flex-start;
+      margin-bottom: 2rem;
     }
 
     .hero-right {
@@ -633,12 +641,11 @@
   <!-- Hero -->
   <section class="hero">
     <div class="hero-left">
-      <div class="hero-label mono">Automotive Paint Specialists</div>
+      <img src="ds%20logo.png" alt="DS Auto Spray" class="hero-logo">
       <h1 class="hero-title">
-        <span class="outline">Custom</span>
-        <span>Finish</span>
+        <span class="outline">Your car,</span>
+        <span>our canvas.</span>
       </h1>
-      <p class="hero-subtitle">Your car, our canvas.</p>
       <a href="#contact" class="hero-cta">
         Get Quote
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

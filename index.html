@@ -171,7 +171,6 @@
     /* === HORIZONTAL SCROLL GALLERY === */
     .gallery-section {
       padding: 6rem 0;
-      overflow: hidden;
     }
 
     .gallery-header {
@@ -194,15 +193,27 @@
       color: var(--text-muted);
     }
 
+    .gallery-scroll {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      cursor: grab;
+    }
+
+    .gallery-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .gallery-scroll:active {
+      cursor: grabbing;
+    }
+
     .gallery-track {
       display: flex;
       gap: 1.5rem;
       padding: 0 4rem;
-      cursor: grab;
-    }
-
-    .gallery-track:active {
-      cursor: grabbing;
+      width: max-content;
     }
 
     .gallery-item {
@@ -641,7 +652,8 @@
       <h2 class="gallery-title">The Work</h2>
       <span class="gallery-count mono">14 Projects</span>
     </div>
-    <div class="gallery-track" id="galleryTrack">
+    <div class="gallery-scroll" id="galleryScroll">
+    <div class="gallery-track">
       <div class="gallery-item">
         <img src="IMG_0082.JPG" alt="Yellow Audi TT colour change" loading="lazy">
         <span class="gallery-item-label mono">Audi TT</span>
@@ -674,6 +686,7 @@
         <img src="IMG_0094.jpg" alt="Detail work" loading="lazy">
         <span class="gallery-item-label mono">Detail</span>
       </div>
+    </div>
     </div>
   </section>
 
@@ -807,35 +820,40 @@
     });
 
     // Draggable gallery
-    const track = document.getElementById('galleryTrack');
+    const scroll = document.getElementById('galleryScroll');
     let isDown = false;
     let startX;
     let scrollLeft;
 
-    track.addEventListener('mousedown', (e) => {
+    scroll.addEventListener('mousedown', (e) => {
       isDown = true;
-      startX = e.pageX - track.offsetLeft;
-      scrollLeft = track.parentElement.scrollLeft;
+      scroll.style.cursor = 'grabbing';
+      startX = e.pageX - scroll.offsetLeft;
+      scrollLeft = scroll.scrollLeft;
     });
 
-    track.addEventListener('mouseleave', () => isDown = false);
-    track.addEventListener('mouseup', () => isDown = false);
+    scroll.addEventListener('mouseleave', () => {
+      isDown = false;
+      scroll.style.cursor = 'grab';
+    });
 
-    track.addEventListener('mousemove', (e) => {
+    scroll.addEventListener('mouseup', () => {
+      isDown = false;
+      scroll.style.cursor = 'grab';
+    });
+
+    scroll.addEventListener('mousemove', (e) => {
       if (!isDown) return;
       e.preventDefault();
-      const x = e.pageX - track.offsetLeft;
+      const x = e.pageX - scroll.offsetLeft;
       const walk = (x - startX) * 2;
-      track.parentElement.scrollLeft = scrollLeft - walk;
+      scroll.scrollLeft = scrollLeft - walk;
     });
 
     // Horizontal scroll with mouse wheel
-    const gallerySection = document.querySelector('.gallery-section');
-    gallerySection.addEventListener('wheel', (e) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        track.scrollLeft += e.deltaY;
-      }
+    scroll.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      scroll.scrollLeft += e.deltaY;
     }, { passive: false });
 
     // Hero parallax

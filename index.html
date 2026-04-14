@@ -79,38 +79,42 @@
       opacity: 0.6;
     }
 
-    /* === HERO: SPLIT DIAGONAL === */
+    /* === HERO === */
     .hero {
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .hero-logo-bar {
+      padding: 2rem 3rem;
+      background: var(--bg);
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-logo {
+      height: 150px;
+      width: 100%;
+      object-fit: contain;
+      object-position: left;
+    }
+
+    .hero-main {
+      flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
       position: relative;
     }
 
     .hero-left {
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      padding: 2rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero-top {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
-
-    .hero-logo {
-      height: 350px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .hero-bottom {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      padding: 4rem;
+      position: relative;
+      z-index: 2;
     }
 
     .hero-right {
@@ -649,11 +653,11 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-left">
-      <div class="hero-top">
-        <img src="ds%20logo.png" alt="DS Auto Spray" class="hero-logo">
-      </div>
-      <div class="hero-bottom">
+    <div class="hero-logo-bar">
+      <img src="ds%20logo.png" alt="DS Auto Spray" class="hero-logo">
+    </div>
+    <div class="hero-main">
+      <div class="hero-left">
         <h1 class="hero-title">
           <span class="outline">Your car,</span>
           <span>our canvas.</span>
@@ -665,9 +669,9 @@
           </svg>
         </a>
       </div>
-    </div>
-    <div class="hero-right">
-      <img src="IMG_0089.JPG" alt="Deep green BMW E30 custom respray" loading="eager">
+      <div class="hero-right">
+        <img src="IMG_0089.JPG" alt="Deep green BMW E30 custom respray" loading="eager">
+      </div>
     </div>
   </section>
 

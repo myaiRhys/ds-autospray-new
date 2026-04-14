@@ -56,17 +56,20 @@
       left: 0;
       right: 0;
       z-index: 100;
-      padding: 1.5rem 2rem;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      mix-blend-mode: difference;
     }
 
     .nav-logo {
-      font-weight: 900;
-      font-size: 1.2rem;
-      letter-spacing: 0.1em;
+      display: block;
+    }
+
+    .nav-logo-img {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
     }
 
     .nav-contact {
@@ -621,7 +624,9 @@
 <body>
   <!-- Navigation -->
   <nav class="nav">
-    <div class="nav-logo mono">DS//AUTO</div>
+    <a href="#" class="nav-logo">
+      <img src="IMG_0083.JPG" alt="DS Auto Spray" class="nav-logo-img">
+    </a>
     <div class="nav-contact mono">072 690 8620</div>
   </nav>
 
